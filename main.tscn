@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://d0esg5hek5a2q"]
+
+[ext_resource type="Shader" path="res://cells.gdshader" id="1_6yrdm"]
+[ext_resource type="Script" path="res://texture.gd" id="1_rnjbw"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5ng3k"]
+shader = ExtResource("1_6yrdm")
+shader_parameter/inverse_multiplier = null
+shader_parameter/positions = null
+
+[sub_resource type="Gradient" id="Gradient_m7tpq"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ycrr1"]
+gradient = SubResource("Gradient_m7tpq")
+width = 512
+height = 512
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Texture" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_5ng3k")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_ycrr1")
+script = ExtResource("1_rnjbw")
+image_size = Vector2i(512, 512)
+point_amount = 50
