@@ -1,12 +1,13 @@
 [gd_scene load_steps=6 format=3 uid="uid://d0esg5hek5a2q"]
 
-[ext_resource type="Shader" path="res://cells.gdshader" id="1_6yrdm"]
-[ext_resource type="Script" path="res://texture.gd" id="1_rnjbw"]
+[ext_resource type="Shader" uid="uid://dajmt3wnc45p" path="res://visual_cells.tres" id="1_0xm2m"]
+[ext_resource type="Script" uid="uid://bi52kxq5xguh1" path="res://texture.gd" id="1_rnjbw"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_5ng3k"]
-shader = ExtResource("1_6yrdm")
-shader_parameter/inverse_multiplier = null
-shader_parameter/positions = null
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0xm2m"]
+shader = ExtResource("1_0xm2m")
+shader_parameter/test_position = Vector2(0.415, 0.37)
+shader_parameter/point_size_sqr = 0.255
+shader_parameter/point_color = Color(0.811765, 0.568627, 0, 1)
 
 [sub_resource type="Gradient" id="Gradient_m7tpq"]
 offsets = PackedFloat32Array(0)
@@ -26,7 +27,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Texture" type="TextureRect" parent="."]
-material = SubResource("ShaderMaterial_5ng3k")
+material = SubResource("ShaderMaterial_0xm2m")
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -38,4 +39,3 @@ grow_vertical = 2
 texture = SubResource("GradientTexture2D_ycrr1")
 script = ExtResource("1_rnjbw")
 image_size = Vector2i(512, 512)
-point_amount = 50

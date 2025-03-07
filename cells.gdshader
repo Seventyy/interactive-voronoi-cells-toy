@@ -1,15 +1,24 @@
 shader_type canvas_item;
 
-const int amount = 3;
+const int AMOUNT = 10;
 
-uniform float inverse_multiplier;
-uniform vec2[amount] positions;
+uniform float threshold = .1;
+uniform vec2[AMOUNT] positions;
 
 void fragment() {
+	for(int i = 0; i < AMOUNT; i++){
+		vec2 diff_vec = vec2(UV.x - positions[i].x, UV.y - positions[i].y);
+		if(diff_vec.x * diff_vec.x + diff_vec.y * diff_vec.y < threshold){
+			COLOR = vec4(1);
+		}
+	}
+}
+
+void vorinoi(){
 	float dist = 999999.;
 	
-	for (int i = 0; i < amount; i++) {
-		for (int j = 0; j < amount; j++) {
+	for (int i = 0; i < AMOUNT; i++) {
+		for (int j = 0; j < AMOUNT; j++) {
 			if(i == j) continue;
 			dist = min(
 				dist, sqrt(
@@ -18,7 +27,4 @@ void fragment() {
 			);
 		}
 	}
-	
-	COLOR = vec4(vec3(dist / inverse_multiplier), 1.);
-	//COLOR = vec4(vec3(dist / 9999999.), 1.);
 }
