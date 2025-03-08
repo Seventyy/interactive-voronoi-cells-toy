@@ -18,3 +18,10 @@ config/icon="res://icon.svg"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/script-ide/plugin.cfg")
+
+[shader_globals]
+
+chunk_size={
+"type": "int",
+"value": 64
+}
