@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=4 uid="uid://d0esg5hek5a2q"]
+[gd_scene load_steps=8 format=4 uid="uid://d0esg5hek5a2q"]
 
 [ext_resource type="Shader" uid="uid://8to7l281cib" path="res://chunk_cells.gdshader" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://bi52kxq5xguh1" path="res://texture.gd" id="1_rnjbw"]
 [ext_resource type="Script" uid="uid://bckelvqodk075" path="res://chunk_manager.gd" id="3_h2yge"]
 [ext_resource type="Script" uid="uid://w0imv6x74fxf" path="res://teleporter.gd" id="4_1bvp3"]
-[ext_resource type="Script" uid="uid://cbselx76ah5wr" path="res://tool.gd" id="5_lquwl"]
+[ext_resource type="Script" uid="uid://drxukpqub8yl" path="res://faller.gd" id="5_lquwl"]
+[ext_resource type="Script" uid="uid://dg8t401vqhany" path="res://repeller.gd" id="6_7mycd"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0xm2m"]
 shader = ExtResource("1_0xm2m")
@@ -16,15 +17,6 @@ shader_parameter/a = 8.395
 shader_parameter/b = 0.0
 shader_parameter/c = 0.0
 shader_parameter/d = 0.0
-
-[sub_resource type="Gradient" id="Gradient_m7tpq"]
-offsets = PackedFloat32Array(0)
-colors = PackedColorArray(0, 0, 0, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_ycrr1"]
-gradient = SubResource("Gradient_m7tpq")
-width = 512
-height = 512
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -47,7 +39,6 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
-texture = SubResource("GradientTexture2D_ycrr1")
 script = ExtResource("1_rnjbw")
 
 [node name="ChunkManager" type="Node" parent="Texture"]
@@ -57,9 +48,11 @@ script = ExtResource("3_h2yge")
 [node name="Teleporter" type="Node" parent="Texture"]
 script = ExtResource("4_1bvp3")
 
-[node name="Tool" type="Node" parent="Texture"]
+[node name="Repeller" type="Node" parent="Texture"]
+script = ExtResource("6_7mycd")
+
+[node name="Faller" type="Node" parent="Texture"]
 script = ExtResource("5_lquwl")
 
-[node name="ShaderManager" type="Node" parent="Texture"]
-
 [connection signal="gui_input" from="Texture" to="Texture/Teleporter" method="_on_texture_gui_input"]
+[connection signal="gui_input" from="Texture" to="Texture/Repeller" method="_on_texture_gui_input"]

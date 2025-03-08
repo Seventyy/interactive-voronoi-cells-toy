@@ -1,46 +1,47 @@
 extends TextureRect
 
-
-func update_shader_parameters():
-	#var positions:PackedVector2Array = \
-		#points.map(func(point:Cell) -> Vector2: return point.pos / Vector2(image_size))
-	#material.set_shader_parameter(&"positions", positions)
-	material.set_shader_parameter(&"points", get_points_vec4())
+@onready var chunk_manager: ChunkManager = %ChunkManager
 
 
-func get_points_vec4() -> PackedVector4Array:
-	var unchunkated_points:Array[Vector2] = points
-	var chunkated_points:Array[Vector4]
-	
-	for y in IMAGE_SIZE.y/CHUNK_SIZE:
-		for x in IMAGE_SIZE.x/CHUNK_SIZE:
-			var rect:Rect2i = Rect2i(Vector2i(x,y) * CHUNK_SIZE, Vector2i.ONE * CHUNK_SIZE)
-			for point in unchunkated_points:
-				if rect.has_point(point):
-					chunkated_points.append(Vector4(
-						x, y, point.x/IMAGE_SIZE.x, point.y/IMAGE_SIZE.y))
-					unchunkated_points.erase(point)
-	
-	for point in chunkated_points:
-		print(point)
-	
-	return PackedVector4Array(chunkated_points)
+func _ready() -> void:
+	initialise_texture()
+	scatter_points()
+	update_shader_parameters()
 
 
-func get_points_texture():
-	var image:Image = Image.new()
-	image = image.create_empty(points.size(), 1, false, Image.FORMAT_RG8)
-	for i in points.size():
-		image.set_pixelv(Vector2i.RIGHT * i, Color8(
-			remap(points[i].x, 0, IMAGE_SIZE.x, 0, 256),
-			remap(points[i].y, 0, IMAGE_SIZE.y, 0, 256),
-			0 
+func initialise_texture() -> void:
+	texture = ImageTexture.create_from_image(
+		Image.create_empty(
+			chunk_manager.IMAGE_SIZE, chunk_manager.IMAGE_SIZE,
+			false, Image.FORMAT_RGB8))
+
+
+func scatter_points() -> void:
+	chunk_manager.points.clear()
+	for i in chunk_manager.POINT_AMOUNT:
+		chunk_manager.points.append(Vector2i(
+			randi_range(0, chunk_manager.IMAGE_SIZE - 1),
+			randi_range(0, chunk_manager.IMAGE_SIZE - 1)
 		))
-	var points_texture:ImageTexture = ImageTexture.new()
-	points_texture = points_texture.create_from_image(image)
+	chunk_manager.chunkate_all()
+
+
+func update_shader_parameters() -> void:
+	material.set_shader_parameter(&"points", get_points_as_vec4(chunk_manager.points))
+
+
+func get_points_as_vec4(points:Array[Vector2i]) -> PackedVector4Array:
+	var points_as_vec4:Array[Vector4]
 	
-	#for i in 10:
-		#print(image.get_pixel(i, 0))
-	#print("---")
-	
-	return points_texture
+	for y in chunk_manager.CHUNK_COUNT:
+		for x in chunk_manager.CHUNK_COUNT:
+			var chunk_points:Array[Vector2i] = chunk_manager.chunks[Vector2i(x,y)].points
+			for point in chunk_points:
+				points_as_vec4.append(Vector4(
+					x,
+					y,
+					float(point.x)/chunk_manager.IMAGE_SIZE,
+					float(point.y)/chunk_manager.IMAGE_SIZE
+				))
+			
+	return PackedVector4Array(points_as_vec4)

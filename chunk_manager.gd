@@ -4,19 +4,20 @@ class_name ChunkManager extends Node
 
 const CHUNK_SIZE:int = 64
 const IMAGE_SIZE:int = 512
+@warning_ignore("integer_division")
 const CHUNK_COUNT:int = IMAGE_SIZE / CHUNK_SIZE # in one axis
-const POINT_AMOUNT:int = 100
+const POINT_AMOUNT:int = 256
 
-var points:Array[Vector2]
+var points:Array[Vector2i]
 var chunks:Dictionary[Vector2i, Chunk]
 
 class Chunk:
 	var points:Array[Vector2i]
 
 
-func chunkate_all(unchunkated_points:Array[Vector2i]) -> void:
-	var chunkated_points:Array[Vector2i]
-	
+func chunkate_all() -> void:
+	initialise_chunks()
+	var unchunkated_points:Array[Vector2i] = points.duplicate()
 	for y in CHUNK_COUNT:
 		for x in CHUNK_COUNT:
 			var rect:Rect2i = Rect2i(Vector2i(x,y) * CHUNK_SIZE, Vector2i.ONE * CHUNK_SIZE)
@@ -47,7 +48,7 @@ func get_chunk(position:Vector2) -> Chunk:
 
 func _ready() -> void:
 	initialise_chunks()
-	var points:Array[Vector2i]
-	for point in texture.points:
+	var converted_points:Array[Vector2i]
+	for point in converted_points:
 		points.append(Vector2i(point))
-	chunkate_all(points)
+	chunkate_all()
